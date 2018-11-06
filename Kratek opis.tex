@@ -1,0 +1,73 @@
+\documentclass[a4paper]{report}
+\usepackage[slovene]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+%\usepackage{bbm}
+\usepackage{amsmath}
+%\usepackage{blindtext}
+\title{Metrična dimenzija grafa }
+\author{Nastja Košir, Ajda Stare}
+\date{\today}
+\begin{document}
+	\maketitle
+
+\section{Navodilo}
+For an ordered subset $W = (w_1 , \dots, w_k ) $ of vertices of a graph G, the distance vector of a vertex v $\in$ V(G)  to  W  is  $(d(v, w_1 ), d(v, w_2 ), \dots, d(v, w_k ))$ . The metric dimension of a graph G is the size of the smallest set of vertices W  $\subseteq $ V(G) such that every two different vertices of the graph have distinct distance vectors. Solve the metric dimension problem as ILP. Its LP relaxation is known as the fractional metric dimension of a graph. Experimentally determine how much these two invariants can differ. Also, try to determine them for trees or any other class of your interest. How far you can go with determining the metric dimension of hypercubes, or some other cartesian product graphs?\\
+
+\section{Opis problema}
+Za urejeno podmnožico $ W =(w_1 , \dots, w_k )$ vozlišč povezanega grafa G, definiramo za $v$ $\in$ $V(G)$ vektor dolžin najkrajših poti {\small $D(v)=(d(v,w_1),...,d(v,w_k))$} med vozliščema $v$ in $w_i$ za $i = 1,\dots, k $. Urejeno k-terico $D(v)$ imenujemo koordinate vozlišča $v$. Če velja $D(u) \neq D(v)$ za $u,v \in V(G)$  potem množico $W$ imenujemo \textbf{razrešitvena množica} grafa G. \textbf{Metrična dimenzija} grafa G je najmanjše število elementov v množici $W$ tako, da za poljubni vozlišči u,v $\in V(G)$ velja $D(u) \neq D(v)$. Navedeno pomeni, da je metrična dimenzija najmanjše število vozlišč v podmnožici $W$ grafa $G$, s katero so ostala vozlišča grafa $G$ enolično določena z najkrajšo razdaljo od vozlišč v podmnožici $W$. $W$ imenujemo metrična baza grafa G. \\
+
+
+\section{Načrt za reševanje}
+Nalogo bova reševali s sledečim ILP programom.\\\\
+Naj bo $G = ( V, E )$ povezan neusmerjen graf z $V = \{ 1,2, \dots, n \} $ in  $\mid E\mid=m$. Določimo najkrajšo pot $d(u,v)$  za vsa vozlišča $u,v \in V $ z uporabo algoritma najkrajših poti. Iščemo razrešitveno množico S = $\{s_1, \dots, s_k \}$ z minimalno močjo. \\\\
+Definiramo matriko A :\\
+\begin{center}
+\[ A_{(u,v),(i,j)}  =  \left \{ \begin{array}{l}
+1,  \mbox{ d(u,i) $\neq$ d(v,i) and d(u,j) $\neq$ d(v,j)}; \\
+0, \mbox{ d(u,i) = d(v,i) or d(u,j) = d(v,j)}. \end{array} \right. 
+\]
+
+ $1 \le u < v \le n$, $1 \le i < j \le n $ .  \\ 
+\end{center}
+\pagebreak
+Definiramo spremenljivko $x_i$, glede na to ali vozlišče $i$ pripada množici S. Podobno definiramo spremenljivko $y_{ij}$, ki nam pove, če sta obe vozlišči $i,j$ v množici $S$.\\
+
+\[  x_i = \left \{ \begin{array}{l}
+1, \mbox{ i $\in$ S}, \\
+0, \mbox{ sicer}. \end{array} \right
+.\] 
+
+\[  y_{i,j} = \left \{ \begin{array}{l}
+1, \mbox{ i,j $\in$ S}, \\
+0, \mbox{ sicer}. \end{array} \right
+.\]\\
+Iščemo: 
+\begin{displaymath}
+\text{min } {\large  \sum_{i=1}^{n} x_i }
+\end{displaymath} 
+Ta funkcija predstavlja minimalno moč množice S. \\ 
+\\
+Pri pogojih:\\
+
+
+$\displaystyle \sum_{i=1}^{n-1}\sum_{j=i+1}^{n} A_{(u,v),(i,j)} \cdot y_{i,j}\ge 1 $,      $1\le u < j \le n$ \\
+
+
+$ y_{ij} \le \frac{1}{2} x_i + \frac{1}{2} x_j$, 1 $\le i < j \le n$ , \\
+
+
+$ y_{ij}\ge x_i + x_j - 1 $, $1 \le i < j \le n$,\\
+
+
+$y_{ij}\in \{ 0,1 \} $, $1 \le i < j \le n$ ,\\
+
+
+$x_k \in \{ 0, 1\}$, $1 \le k \le n$ .\\\\Zgornji pogoji zagotavljajo, da za vsaki poljubni dve vozlišči $u$ in $v$ obstajata vsaj dve vozlišči $i,j$  iz množice S. Če namesto binarnih spremenljivk $x_i$ zahtevamo realne spremenljivke, pa rešujemo problem \textbf{delne metrične dimenzije}. \\\\
+Obravnavali bova metrično in delno metrično dimenzijo na različnih oblikah grafov, kot so npr. drevesa in hiperkocke. Na koncu bova še določili metrično dimenzijo na kartezičnem produktu grafov. \\
+
+
+
+
+
+\end{document}
