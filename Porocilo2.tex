@@ -1,0 +1,86 @@
+\documentclass[a4paper]{report}
+\usepackage[slovene]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{bbm}
+\usepackage{amsmath}
+\usepackage{blindtext}
+\usepackage{MnSymbol}
+\usepackage{wasysym}
+\title{Metrična dimenzija grafa }
+\author{Nastja Košir, Ajda Stare}
+\date{\today}
+\begin{document}
+	\section*{Metrična in delna metrična dimenzija kartezičnega produkta}
+	
+	Zanimalo naju je, kakšna je metrična in delna metrična dimenzija pri različnih kartezičnih produktih grafov. Najprej sva si pogledali kartezični produkt poti $P_{t}\Box P_{m}$. Ugotovili sva da je metrična in delna metrična dimenzija enaka 2. Pri kartezičnem produktu poti in cikla, $P_{t}\Box C_{m}$ sva ugotovili, da je metrična dimenzija pri  sodih m enaka 3, delna metrična pa je enaka 2. Če je m lih sva dobili metrično dimenzijo 2, delna metrična dimenzija pa ni tako lepa kot v prejšnem primeru, velja pa  $dim_{f}( P_{t}\Box C_{m})\ge dim_{f}(C_{m})= \frac{m}{m-1}$.
+	Nadaljevali sva s kartezičnim produktom ciklov $C_{t}\Box C_{m}$. 
+	Za lihe m sva dobili metrično dimenzijo 3, z izjemo $C_{2}\Box C_{5}$, ki ima metrično dimenzijo 2. Če sta m in n soda, sva dobili metrično dimenzijo 4, z izjemo $C_{2}\Box C_{4}$, ki ima metrično dimenzijo 3. Za delno metrično dimenzijo sva ugotovili, če sta m in n soda, je enaka 2 sicer pa je manjša od 2. Pri kartezičnem produktu polnega grafa in poti $K_{t}\Box P_{m}$, sva ugotovili, da je metrična dimenzija vedno enaka $t-1$. Delna metrična dimenzija, pa je enaka $\frac{|V(K_{t})|}{2} = dim_{f}(K_{t})$. Metrična dimenzija kartezičnega produkta polnega grafa in cikla $K_{t}\Box C_{m}$ je enaka 3, če je $t = 4$ in m sod, oziroma 4, če je $t = 4$ in m lih. Če je $t \ge 5$, je metrična dimenzija enaka $t-1$. Delna metrična dimenzija je enaka $\frac{|V(K_{t})|}{2}$, razen v posebnem primeru ko je $t = 2$ in m lih, $m \ge 3 $, je $dim_f(K_{t}\Box C_{m}) = \frac{2m}{m+1}$, tu je tudi metrična dimenzija enaka 2.
+	Povzetek ugotovitev: 
+	\begin{center}
+		\begin{tabular}{ ||c|c|c|| }
+			\hline
+			G  & $\beta(G)$& $dim_{f}(G)$\\
+			\hline
+			$P_{t} \Box P_{m} $ & 2& 2 \\
+			\hline
+			&&\\
+			$P_{t} \Box C_{m} $& 2, če je m liho& $ \ge dim_{f}(C_{m})= \frac{m}{m-1}$\\
+			& 3, če je m sodo& 2\\
+			\hline
+			&&\\
+			$C_{t} \Box  C_{m}$ & 3, če je t ali m liho& $\le 2 $\\
+			&4, če je t in m sodo& 2\\
+			\hline
+			&&\\
+			$K_{t} \Box P_{m}$& t-1 &$\frac{|V(K_{t}|)}{2} = dim_{f}(K_{t})$\\
+			\hline
+			&&\\
+			$K_{t} \Box C_{m}$ & 3, če je t = 4 in m sod& $\frac{|V(K_{t})|}{2}$\\
+			&&\\
+			&4, če je t = 4 in m lih& $\frac{|V(K_{t})|}{2}$\\
+			&&\\
+			& t-1, t$\ge$5 &$\frac{|V(K_{t})|}{2}$\\
+			&&\\
+			&2, če je t =2, m lih, $m\ge 3$ &$\frac{2m}{m+1}$\\
+			&&\\
+			\hline
+	
+%			$ K_{t} \Box K_{m}$ & $ [ \frac{2}{3}(t + m - 1) ]$, če je $m \le t \le 2m-1 $& \\
+%			& t-1, če je $ t \ge 2m -1 $&\\
+			\hline
+			
+		\end{tabular}
+	\end{center}
+	\newpage
+	\section*{Metrična in delna metrična dimenzija mreže}
+	Po definiciji je dvodimenzionalna mreža graf $G_{m,n}$ velikosti $m\times n$, ki je kartezični produkt poti $P_{m}\Box P_{n}$. Tako je d-dimenzionalna mreža graf $G_{m_{1},m_{2},\dots,m_{d}} = P_{m_{1}}\Box P_{m_{2}}\Box \dots P_{m_{d}}$. Posebaj sva izračunali metrično in delno metrično dimenzijo za  $G_{m,n}=P_{m}\Box P_{n}$, kjer sva ugotovili, da sta obe enaki 2. Za dimenzije večje od 2 pa velja naslednja formula : \\
+	\begin{center}
+		$\beta(P_{m_{1}}\Box P_{m_{2}}\Box \dots \Box P_{m_{d})} \le d$, za $d\ge 2$
+	\end{center}
+	Zgornjo formulo sva potrdili z računanjem posebnega primera mreže hiperkocke. Hipekocka je sestavljena iz kartezičnega produkta poti $P_{2}$. Pogledali sva  hiperkocke do dimenzije 5, saj je bilo za večje dimenzije računsko prezahtevno. Hiperkocko dimenzije n označimo $Q_{n} = \underbrace{P_{2} \Box P_{2}\Box \dots \Box P_{2}\Box}_{n}$. Opazimo da je
+	\begin{center}
+		$\beta(Q_{n})\le n$
+	\end{center}
+	Hkrati velja, za $n \ge 2$ je delna metrična dimenzija $dim_{f}(Q_{n}) = 2$ . 
+	V spodnji tabeli so povzete najine ugotovitve in znane metrične ter delne metrične dimenzije za dimenzije večje od 5.
+	
+	
+	\begin{center}
+		\begin{tabular}{|c||c|c|c|c|c|c|c|c|c|c|c|c|c|c|c}
+			\hline
+			\hline
+			n&2&3&4&5&6&7&8&9&10&15\\
+			\hline
+			$\beta(Q_{n})$&2&3&4&4&5&6&6&7&7& $\le 10$ \\
+			\hline
+			$dim_{f}(Q_{n})$&2&2&2&2&2&2&2&2&2&2\\
+			\hline
+			\hline
+		\end{tabular}
+	\end{center}
+	
+\end{document}
+
+
+
