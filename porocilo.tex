@@ -1,0 +1,202 @@
+\documentclass[a4paper]{report}
+\usepackage[slovene]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{bbm}
+\usepackage{amsmath}
+\usepackage{blindtext}
+\usepackage{MnSymbol}
+\usepackage{array,multirow,graphicx}
+\usepackage{url}
+
+\title{Metrična dimenzija grafa }
+\author{Nastja Košir, Ajda Stare}
+\date{\today}
+\begin{document}
+	\maketitle
+
+\section*{Navodilo}
+For an ordered subset $W = (w_1 , \dots, w_k ) $ of vertices of a graph G, the distance vector of a vertex v $\in$ V(G)  to  W  is  $(d(v, w_1 ), d(v, w_2 ), \dots, d(v, w_k))$. The metric dimension of a graph G is the size of the smallest set of vertices W  $\subseteq $ V(G) such that every two different vertices of the graph have distinct distance vectors. Solve the metric dimension problem as ILP. Its LP relaxation is known as the fractional metric dimension of a graph. Experimentally determine how much these two invariants can differ. Also, try to determine them for trees or any other class of your interest. How far you can go with determining the metric dimension of hypercubes, or some other cartesian product graphs?\\
+
+\section*{Opis problema}
+Naj bo $G=(V,E)$ neusmerjen, povezan graf brez zank in večkratnih vozlišč. Za urejeno podmnožico $ W =(w_1 , \dots, w_k )$ vozlišč grafa G, definiramo\\$r(v|W) = (d(v,w_1), \dots ,   d(v,w_k))$ kot  metrično predstavitev vozlišča $v$, glede na množico W. Množico W imenujemo \textbf{rešljiva (razrešitvena) množica} grafa G, če za poljubni  različni vozlišči $u,v$ grafa G velja $r(u|W)\neq r(v|W)$ (če bi veljalo $r(u|W)= r(v|W)$, bi pomenilo $u = v$). Torej, če je W rešljiva množica moči k, za graf G reda n, potem množica $\{r(v,W): v\in V(G)\}$ vsebuje n različnih metričnih predstavitev glede na množico W. Rešljiva množica grafa G z najmanjšim številom vozlišč se imenuje \textbf{metrična baza grafa G}. Število vozlišč metrične baze G pa je \textbf{metrična dimenzija grafa G}, ki jo označujemo z \textbf{$dim(G)$}. W je rešljiva množica, če ne obstaja podmnožica množice W, ki bi bila rešljiva množica.  
+
+\section*{Metrična in deljena metrična dimenzija za splošne grafe}
+
+Nalogo bova reševali s sledečim ILP programom.\\
+
+Definiramo $V_p$ kot množico $\binom{n}{2}$ parov vozlišč grafa G. Za vsak par $u,v \in V(G)$ definiramo njuno $R\{u,v\}=\{x \in V(G): d(u,x)\neq d(v,x)\}.$ Tudi za vsak $x \in V(G)$ definiramo $R\{x\}= \{\{u,v\}\in V_p: d(u,x)\neq d(v,x)\}$. Z $R(G)$ označimo dvodelen graf, sestavljen iz dveh disjunktnih množic $V$ in $V_p$, kjer je $x \in V$ povezan s parom $\{u,v\} \in V_p$, če velja $d(u,x)\neq d(v,x)$ za graf G.  Tako je minimalna moč $S \subseteq V$ grafa $R(G)$, za katero velja $N(S) = V_p$  , metrična dimenzija grafa G. \\\\
+Naj bo $V = \{v_1,\dots, v_n\}$ in $V_p = \{s_1,s_2,\dots,s_{\binom{n}{2}} \} $. Definiramo matriko  $ A = (a_{ij})$  velikosti $\binom{n}{2} \times n$, kjer je\[ a_{i,j}  =  \left \{ \begin{array}{l}1,\ \mbox{$ s_i v_j \in E(R(G))$}, \\0,\ \mbox{sicer}, \end{array} \right. \]
+za $1\le i\le \binom{n}{2}$ in $1\le  j\le n$.\\
+
+ Minimiziramo funkcijo: \begin{center}$f(x_1,x_2, \cdots,x_n)=x_1+x_2+\cdots+x_n$ 
+ob upoštevanju $A\bar{x}\ \ge\ \bar{1}$,\end{center} 
+kjer je: \begin{center}
+ $\bar{x}=(x_1,\cdots,x_n)^T$,\\
+$x_i\ \in\ \{0,1 \}$,\\
+$\bar{1}$ je $\binom{n}{2}\times 1$  stolpični vektor samih enic. \end{center}
+Če namesto binarnih spremenljivk $x_i$ zahtevamo realne spremenljivke na intervalu [0,1], pa rešujemo problem \textbf{deljene metrične dimenzije}. \\
+
+Zgornja linearna programa sva nato uporabili na splošnih grafih, ki sva jih generirali s pomočjo Sage-ove funkcije \textit{nauty\_geng}. Uporabili sva samo povezane grafe, saj sta obe metrični dimenziji definirani le zanje. Hitro sva ugotovili, da je največja razlika med metrično in deljeno metrično dimenzijo dosežena pri polnih grafih. Metrična dimenzija grafa $K_n$ je enaka $n-1$, deljena metrična dimenzija pa $\frac{n}{2}$. Tako njuna razlika znaša $\frac{n}{2}-1$. \\
+
+Zanimalo naju je tudi, kako s številom vozlišč narašča časovna zahtevnost algoritma. Za grafe do vključno 8 vozlišč, sva izračunali povprečje časa izračuna na vseh povezanih grafih z določenim številom vozlišč in za generiranje grafov uporabili funkcijo \textit{nauty\_geng}. Za večje grafe je bilo to časovno prezahtevno, zato sva povprečili le preko 20 naključno izbranih grafov na nekem številu vozlišč. Pri tem sva si pomagali s funkcijo \textit{graphs.RandomGNP($n, p$)}, ki vrne naključen graf na $n$ vozliščih z verjetnostjo $p$ povezave med dvema vozliščema. Spodnja tabela prikazuje povprečen čas izvajanja za metrično in deljeno metrično dimenzijo glede na število vozlišč. Opazno je, da je izračun metrične diminzije časovno zahtevnejši, kar se zdi povsem smiselno, saj gre pri prvi za celoštevilski linearni program, pri drugi pa za linearni program.
+
+\begin{center}
+\resizebox{12.3cm}{!} {
+\begin{tabular}{||c| |*{8}{c|}|}
+\hline\hline
+Število vozlišč & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\
+\hline
+Metrična dimenzija [ms] & 17,2 & 10,4 & 1,91 & 3,30 & 2,05 & 2,74 & 3,39 & 3,63 \\
+\hline
+Deljena metrična dimenzija [ms] & 4,47 & 0,00 & 1,26 & 1,64 & 1,42 & 1,94 & 2,18 & 2,93 \\
+\hline\hline
+\end{tabular}}
+\end{center}
+
+\begin{center}
+\resizebox{12.3cm}{!} {
+\begin{tabular}{||c| |*{8}{c|}|}
+\hline\hline
+Število vozlišč & 10 & 20 & 30 & 40 & 50 \\
+\hline
+Metrična dimenzija [s] & 0,00973 & 0,139 & 2,44 & 24,7 & 854\\
+\hline
+Deljena metrična dimenzija [ms] & 5,13 & 17,9 & 59,5 & 119 & 259 \\
+\hline\hline
+\end{tabular}}
+\end{center}
+
+\section*{Metrična in deljena metrična dimenzija za drevesa}
+
+Najin algoritem za računanje metrične dimenzije drevesa najprej upošteva dejstvo, da je metrična dimenzija poti enaka 1. Drevo (na vsaj dveh vozliščih) je pot, če ima natanko dve vozlišči stopnje 1 oziroma 2 lista, vsa ostala vozlišča pa so stopnje 2. V primeru, ko drevo ni pot, si pomagamo z neenakostjo (iz vira \cite{1}) $$n \le \frac{( \beta D + 4)(D + 2)}{8}$$ oziroma $$\beta \ge \frac{4(2n - D - 2)}{D(D + 2)},$$ kjer je $n$ število vozlišč drevesa, $\beta$ metrična dimenzija grafa in $D$ premer grafa. Kadar je $D$ sodo, neenakost velja z enačajem. Tako algoritem za sode $D$ vrne metrično dimenzijo z eksplicitno izražavo, za lihe pa doda novo omejitev v celoštevilski linearni program za izračun metrične dimenzije pri splošnih grafih.\\
+
+Podobno algoritem za računanje deljene metrične dimenzije najprej preveri ali je drevo morda pot in takrat vrne 1, sicer pa nadaljuje enako kot v programu za splošne grafe. \\ 
+
+Časovno zahtevnost sva do dreves na 10 vozliščih preverili s pomočjo računanja povprečij časov izračuna na vseh drevesih za posamezno število vozlišč, ki sva jih generirali s funkcijo \textit{graphs.trees}. Za drevesa z večjim številom vozlišč sva zaradi izredno počasnega izvajanja izračunali povprečje le na petih naključnih grafih, ki sva jih generirali s funkcijo \textit{graphs.RandomTree}. Iz spodnjih tabel časov izvajanja posameznih algoritmov je razvidno, da program za računanje metrične dimenzije na drevesih deluje bolje od standardnega le za zelo majhne grafe. Algoritem, ki je v tabeli označen z \textit{MD za drevesa 2} upošteva le izboljšavo za poti, ne pa tudi zgornje neenačbe, deluje hitreje kot algoritem za računanje metrične dimenzije na drevesih za polovico testiranih primerov. Iz tega lahko sklepamo, da dodana neenačba v splošnem bistveno ne prispeva k hitrosti izračuna. \\
+
+Pri deljeni metrični dimenziji za grafe je opazno, da je bistveno hitrejša od standardnega programa za majhne grafe. Pri večjih grafih deluje bolje v polovici testiranih primerov.
+
+\begin{center}
+\begin{tabular}{||c| |*{10}{c|}|}
+\hline\hline
+Število vozlišč & 1 & 2 & 3 & 4 & 5 & 6 \\
+\hline\hline
+MD [ms] & 2,11 & 1,65 & 0,00 & 2,95 & 2,91 & 2,07 \\
+\hline
+MD za drevesa [ms] & 0,137 & 0,142 & 0,158 & 4,19 & 3,13 & 2,40 \\
+\hline
+MD za drevesa 2 [ms] & 0,156 & 0,124 & 0,222 & 1,85 & 1,76 & 2,77 \\
+\hline\hline
+FMD [ms] & 1,13 & 1,70 & 1,78 & 1,12 & 1,16 & 2,53 \\
+\hline
+FMD za drevesa [ms] & 0,938 & 0,125 & 0,153 & 0,815 & 0,807 & 2,13 \\
+\hline\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{||c| |*{10}{c|}|}
+\hline\hline
+Število vozlišč & 7 & 8 & 9 & 10 & 20 & 30 \\
+\hline\hline
+MD [ms] &  2,97 & 4,07 & 4,96 & 4,91 &  28,6 & 98,6 \\
+\hline
+MD za drevesa [ms] & 3,14 & 3,65 & 4,40 & 7,45 & 38,1 & 101 \\
+\hline
+MD za drevesa 2 [ms] & 3,56 & 2,90 & 6,74 & 6,42 & 25,4 & 110 \\
+\hline\hline
+FMD [ms] & 2,89 & 4,43 & 3,28 & 4,60 & 23,5 & 84,2 \\
+\hline
+FMD za drevesa [ms] & 3,73 & 3,36 & 4,23 & 4,42 & 25,5 & 81,8 \\
+\hline\hline
+\end{tabular}
+\end{center}
+
+	\section*{Metrična in deljena metrična dimenzija kartezičnega produkta}
+	
+	Zanimalo naju je, kakšna je metrična in deljena metrična dimenzija pri različnih kartezičnih produktih grafov. Pogledali sva si kartezični produkt poti $P_{t}\Box P_{m}$. Ugotovili sva da je metrična in delna metrična dimenzija enaka 2. Pri kartezičnem produktu poti in cikla, $P_{t}\Box C_{m}$ sva ugotovili, da je metrična dimenzija pri sodih m enaka 3, deljena metrična pa je enaka 2. Če je m lih sva dobili metrično dimenzijo 2, deljena metrična dimenzija pa ni tako "lepa" kot v prejšnem primeru,vendar sva ugotovili, da velja  $dim_{f}( P_{t}\Box C_{m})\ge dim_{f}(C_{m})= \frac{m}{m-1}$.
+	Nadaljevali sva s kartezičnim produktom ciklov $C_{t}\Box C_{m}$. 
+	Za lihe m sva dobili metrično dimenzijo 3, z izjemo $C_{2}\Box C_{5}$, ki ima metrično dimenzijo 2. Če sta m in n soda, sva dobili metrično dimenzijo 4, z izjemo $C_{2}\Box C_{4}$, ki ima metrično dimenzijo 3. Za deljeno metrično dimenzijo sva ugotovili, če sta m in n soda, je enaka 2, sicer pa je manjša od 2. Pri kartezičnem produktu polnega grafa in poti $K_{t}\Box P_{m}$, sva ugotovili, da je metrična dimenzija vedno enaka $t-1$. Deljena metrična dimenzija, pa je enaka $\frac{|V(K_{t})|}{2} = dim_{f}(K_{t})$. Metrična dimenzija kartezičnega produkta polnega grafa in cikla $K_{t}\Box C_{m}$ je enaka 3, če je $t = 4$ in m sod, oziroma 4, če je $t = 4$ in m lih. Če je $t \ge 5$, je metrična dimenzija enaka $t-1$. Deljena metrična dimenzija je enaka $\frac{|V(K_{t})|}{2}$, razen v posebnem primeru ko je $t = 2$ in m lih, $m \ge 3 $, je $dim_f(K_{t}\Box C_{m}) = \frac{2m}{m+1}$, tu je tudi metrična dimenzija enaka 2.
+	Povzetek ugotovitev (iz vira \cite{4}, \cite{5}) : 
+	\\
+	\begin{center}
+		\begin{tabular}{ ||c|c|c|| }
+			\hline
+			G  & $\beta(G)$& $dim_{f}(G)$\\
+			\hline
+			$P_{t} \Box P_{m} $ & 2& 2 \\
+			\hline
+			&&\\
+			$P_{t} \Box C_{m} $& 2, če je m liho& $ \ge dim_{f}(C_{m})= \frac{m}{m-1}$\\
+			& 3, če je m sodo& 2\\
+			\hline
+			&&\\
+			$C_{t} \Box  C_{m}$ & 3, če je t ali m liho& $\le 2 $\\
+			&4, če je t in m sodo& 2\\
+			\hline
+			&&\\
+			$K_{t} \Box P_{m}$& t-1 &$\frac{|V(K_{t}|)}{2} = dim_{f}(K_{t})$\\
+			\hline
+			&&\\
+			$K_{t} \Box C_{m}$ & 3, če je t = 4 in m sod& $\frac{|V(K_{t})|}{2}$\\
+			&&\\
+			&4, če je t = 4 in m lih& $\frac{|V(K_{t})|}{2}$\\
+			&&\\
+			& t-1, t$\ge$5 &$\frac{|V(K_{t})|}{2}$\\
+			&&\\
+			&2, če je t =2, m lih, $m\ge 3$ &$\frac{2m}{m+1}$\\
+			&&\\
+			\hline
+			
+			%			$ K_{t} \Box K_{m}$ & $ [ \frac{2}{3}(t + m - 1) ]$, če je $m \le t \le 2m-1 $& \\
+			%			& t-1, če je $ t \ge 2m -1 $&\\
+			\hline
+			
+		\end{tabular}
+	\end{center}
+	\newpage
+	\section*{Metrična in deljena metrična dimenzija hiperkocke}
+	V sklopu najine naloge sva si pogledali metrično in deljeno metrično dimenzijo hiperkocke. Preden nadaljujeva z lastnosti le-te, si je vredno pogledati lastnosti mreže.
+	Po definiciji je dvodimenzionalna mreža graf $G_{m,n}$ velikosti $m\times n$, ki je kartezični produkt poti $P_{m}\Box P_{n}$. Tako je d-dimenzionalna mreža graf $G_{m_{1},m_{2},\dots,m_{d}} = P_{m_{1}}\Box P_{m_{2}}\Box \dots P_{m_{d}}$. Posebej sva izračunali metrično in deljeno metrično dimenzijo za  $G_{m,n}=P_{m}\Box P_{n}$, kjer sva ugotovili, da sta obe enaki 2. Za dimenzije večje od 2 pa velja naslednja formula (iz vira \cite{3}): \\
+	\begin{center}
+		$\beta(P_{m_{1}}\Box P_{m_{2}}\Box \dots \Box P_{m_{d})} \le d$, za $d\ge 2$
+	\end{center}
+	Zgornjo formulo sva potrdili z računanjem posebnega primera mreže hiperkocke. Hipekocka je sestavljena iz kartezičnega produkta poti $P_{2}$ oziroma $K_{2}$ Pogledali sva  hiperkocke do dimenzije 5, saj je bilo za večje dimenzije računsko prezahtevno. Hiperkocko dimenzije n označimo $Q_{n} = \underbrace{K_{2} \Box K_{2}\Box \dots \Box K_{2}}_{n}$ (iz vira \cite{4}). Opazimo da je
+	\begin{center}
+		$\beta(Q_{n})\le n$
+	\end{center}
+	Za $n \ge 2$ je delna metrična dimenzija $dim_{f}(Q_{n}) = 2$ (iz vira \cite{2}). 
+	V spodnji tabeli so povzete najine ugotovitve in znane metrične ter delne metrične dimenzije za dimenzije večje od 5 (iz vira \cite{3}).
+	
+	
+	\begin{center}
+		\begin{tabular}{|c||c|c|c|c|c|c|c|c|c|c|c|c|c|c|c}
+			\hline
+			\hline
+			n&2&3&4&5&6&7&8&9&10&15\\
+			\hline
+			$\beta(Q_{n})$&2&3&4&4&5&6&6&7&7& $\le 10$ \\
+			\hline
+			$dim_{f}(Q_{n})$&2&2&2&2&2&2&2&2&2&2\\
+			\hline
+			\hline
+		\end{tabular}
+	\end{center}
+
+
+
+
+
+\begin{thebibliography}{99}
+
+\bibitem{1} Metric dimension (graph theory). Pridobljeno iz: \url{https://en.wikipedia.org/wiki/Metric_dimension_(graph_theory)}.
+
+\bibitem{2} S. Arumugam, V. Mathew (2012). The fractional metric dimension of graphs. Discrete Mathematics \textbf{312}, 1584–1590.
+\bibitem{3} Žuželj, M. (2011). Metrična dimenzija grafa (Diplomsko delo). Univerza v Mariboru, Fakulteta za naravoslovje in matematiko. Pridobljeno iz \url{https://dk.um.si/IzpisGradiva.php?id=20027}.
+\bibitem{4} Cáceres J.,Garijo D.,Puertas M. L. , Seara C. (2010). On the determing number and the metric dimension of graphs (Raziskovalno poročilo). Pridobljeno iz spletne strani: \url{https://www.emis.de/journals/EJC/Volume_17/PDF/v17i1r63.pdf}.
+\bibitem{5} M. Feng, B. Lv, K. Wang (2012). On the fractional metric dimension of graphs (Raziskovalno poročilo). Pridobljeno iz: \url{https://arxiv.org/pdf/1112.2106.pdf}.
+
+\end{thebibliography}
+
+\end{document}
